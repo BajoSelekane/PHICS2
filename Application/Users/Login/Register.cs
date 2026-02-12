@@ -1,0 +1,9 @@
+﻿
+using Application.Abstractions.Messaging;
+
+namespace Application.Users.Login
+{
+  
+    public sealed record RegisterUserCommand(string PhoneNumber,string Email, string Password) : ICommand<string>;
+
+}
