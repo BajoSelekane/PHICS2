@@ -1,6 +1,7 @@
 <Solution>
   <Project Path="Application/Application.csproj" />
   <Project Path="Domain/Domain.csproj" />
+  <Project Path="Infrastructure/Infrastructure.csproj" />
   <Project Path="PHICS2/PHICS2.Client/PHICS2.Client.csproj" />
   <Project Path="PHICS2/PHICS2/PHICS2.csproj" />
   <Project Path="SharedLibrary/SharedLibrary.csproj" />
