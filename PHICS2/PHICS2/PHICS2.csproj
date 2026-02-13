@@ -23,8 +23,17 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.2" />
     <PackageReference Include="Microsoft.Identity.Web" Version="4.3.0" />
     <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.15.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="10.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="10.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.0.0" />
     <PackageReference Include="Twilio" Version="7.14.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Endpoints\Doctor\" />
+    <Folder Include="Endpoints\Clinics\" />
+    <Folder Include="Endpoints\Patients\" />
+    <Folder Include="Endpoints\TimeSlots\" />
   </ItemGroup>
 
 </Project>

@@ -4,8 +4,11 @@ using System.Text;
 
 namespace Application.Interfaces
 {
-    public interface ISmsService
+    public interface ITwilioService
     {
-        Task SendSmsAsync(string to, string message);
+        Task SendAppointmentConfirmationAsync(
+      string phoneNumber,
+      string message);
+
     }
 }

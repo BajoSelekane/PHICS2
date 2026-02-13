@@ -6,7 +6,9 @@ using Microsoft.EntityFrameworkCore;
 using PHICS2.Components;
 using PHICS2.Components.Account;
 using PHICS2.Data;
+using MediatR;
 using Infrastructure.Services;
+using Application;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,10 +18,14 @@ builder.Services.AddRazorComponents()
     .AddInteractiveWebAssemblyComponents()
     .AddAuthenticationStateSerialization();
 
+builder.Services.AddMediatR(cfg =>
+    cfg.RegisterServicesFromAssembly(
+        typeof(ApplicationAssemblyReference).Assembly));
+
 builder.Services.Configure<TwilioSettings>(
     builder.Configuration.GetSection("Twilio"));
 
-builder.Services.AddScoped<ISmsService, TwilioSmsService>();
+builder.Services.AddScoped<ITwilioService, TwilioSmsService>();
 
 
 builder.Services.AddCascadingAuthenticationState();
@@ -33,7 +39,7 @@ builder.Services.AddAuthentication(options =>
     })
     .AddIdentityCookies();
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ;
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
@@ -48,13 +54,14 @@ builder.Services.AddIdentityCore<ApplicationUser>(options =>
     .AddDefaultTokenProviders();
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
-builder.Services.AddMvc(); // Full MVC
+
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    
     app.UseWebAssemblyDebugging();
     app.UseMigrationsEndPoint();
 }

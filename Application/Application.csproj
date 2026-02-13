@@ -11,4 +11,15 @@
     <ProjectReference Include="..\SharedLibrary\SharedLibrary.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\Clinics\" />
+    <Folder Include="Features\Doctor\" />
+    <Folder Include="Features\Patients\" />
+    <Folder Include="Features\TimeSlots\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.0" />
+  </ItemGroup>
+
 </Project>

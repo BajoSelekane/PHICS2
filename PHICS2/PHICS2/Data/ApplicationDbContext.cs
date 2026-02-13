@@ -1,19 +1,56 @@
 using Domain;
+using Domain.Common;
+using Domain.Common.Events;
 using Domain.Entities;
+using MediatR;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace PHICS2.Data
 {
-    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser>(options)
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
+        private readonly IMediator _mediator;
+
+        public ApplicationDbContext(
+            DbContextOptions<ApplicationDbContext> options,
+            IMediator mediator)   // inject MediatR
+            : base(options)
+        {
+            _mediator = mediator;
+        }
+    
+
         public DbSet<Patient> Patients => Set<Patient>();
         public DbSet<Doctor> Doctors => Set<Doctor>();
         public DbSet<Appointment> Appointments => Set<Appointment>();
-        public DbSet<TimeSlot> Timeslots => Set<TimeSlot>();
+        public DbSet<TimeSlot> TimeSlots => Set<TimeSlot>();
         public DbSet<Login> Logins => Set<Login>();
         public DbSet<Register> Registers => Set<Register>();
         public DbSet<Clinics> Clinics => Set<Clinics>();
+
+        public override async Task<int> SaveChangesAsync(
+       CancellationToken cancellationToken = default)
+        {
+            var domainEvents = ChangeTracker
+                .Entries<BaseEntityEvenrts>()
+                .SelectMany(e => e.Entity.DomainEvents)
+                .ToList();
+
+            var result = await base.SaveChangesAsync(cancellationToken);
+
+            foreach (var domainEvent in domainEvents)
+            {
+                await _mediator.Publish(domainEvent, cancellationToken);
+            }
+
+            foreach (var entity in ChangeTracker.Entries<BaseEntityEvenrts>())
+            {
+                entity.Entity.ClearDomainEvents();
+            }
+
+            return result;
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -28,6 +65,18 @@ namespace PHICS2.Data
             .WithMany(d => d.Appointments)
             .HasForeignKey(a => a.DoctorId)
             .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Appointment>()
+            .HasOne(a => a.TimeSlot)
+            .WithOne(t => t.Appointment)
+            .HasForeignKey<Appointment>(a => a.TimeSlotId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Appointment>()
+            .HasIndex(a => a.TimeSlotId)
+            .IsUnique();
+
+
 
             base.OnModelCreating(modelBuilder);
 
@@ -47,5 +96,8 @@ namespace PHICS2.Data
 
 
         }
+
+       
+
     }
 }
