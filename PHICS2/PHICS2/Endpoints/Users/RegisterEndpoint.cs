@@ -14,7 +14,7 @@ namespace PHICS2.Endpoints.Users
         public record Request(string PhoneNumber, string Email, string Password);
         public void MapEndpoint(IEndpointRouteBuilder app)
         {
-            app.MapPost("/users/register", async (
+            app.MapPost("/users/registerendpoint", async (
           Request request,
           ISender sender,
           CancellationToken cancellationToken) =>

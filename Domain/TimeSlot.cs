@@ -1,19 +1,25 @@
-﻿using Domain.Entities;
+﻿using Domain;
+using Domain.Entities;
 
 namespace Domain
 {
     public class TimeSlot :BaseEntity
     {
-        public string AppointmentId { get; set; } = default!;
-        public Doctor Doctors { get; set; } = default!;
-        public string PatientId { get; set; } = default!;
-        public string DoctorId { get; set; } = default!;
-        public DateTime DayOfWeek { get; set; }
-        public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
+        //public Doctor Doctors { get; set; } = default!;
+        public Guid PatientId { get; set; } = default!;
+        public Guid DoctorId { get; set; } = default!;
+        public DateOnly DayOfWeek { get; set; }
+        public DateOnly SlotDate { get; set; }
+        public TimeSpan StartTime { get; set; }
+        public TimeSpan EndTime { get; set; }
         public bool IsAvailable { get; set; } =false;
-        public Appointment? Appointments { get; set; }
-     
+
+        public virtual Doctor Doctor { get; set; } = null!;
+        public virtual Appointment Appointment { get; set; } =null!;
+        //public Appointment? Appointments { get; set; }
+
+
 
     }
 }
+

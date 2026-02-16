@@ -1,4 +1,41 @@
-﻿@implements IDisposable
+﻿@using MudBlazor
+@inject NavigationManager Nav
+
+<!-- Top bar + Drawer component to be used inside MainLayout -->
+<MudAppBar Elevation="3" Dense="true">
+    <MudIconButton Icon="@Icons.Material.Filled.Menu"
+                   Color="Color.Inherit"
+                   Edge="Edge.Start"
+                   OnClick="@ToggleDrawer" />
+
+    <MudText Typo="Typo.h6" Class="ml-2">
+        🏥 PHICS2 • Hospital System
+    </MudText>
+
+    <MudSpacer />
+    <MudIconButton Icon="@Icons.Material.Filled.Notifications" Color="Color.Inherit" />
+    <MudIconButton Icon="@Icons.Material.Filled.AccountCircle" Color="Color.Inherit" />
+</MudAppBar>
+
+<MudDrawer Elevation="4" @bind-Open="_drawerOpen" Variant="DrawerVariant.Responsive">
+    <MudNavMenu>
+        <MudNavLink Href="/" Match="NavLinkMatch.All">Home</MudNavLink>
+        <MudNavLink Href="/clinic">Appointment Clinic</MudNavLink>
+        <MudNavLink Href="/doctor">Doctors Schedule</MudNavLink>
+        <MudNavLink Href="/patient">Patient Appointment</MudNavLink>
+        <MudNavLink Href="/timeslot">Check TimeSlot</MudNavLink>
+    </MudNavMenu>
+</MudDrawer>
+
+@code {
+    private bool _drawerOpen = true;
+    void ToggleDrawer() => _drawerOpen = !_drawerOpen;
+}
+
+
+
+
+@* @implements IDisposable
 
 @inject NavigationManager NavigationManager
 
@@ -19,14 +56,25 @@
         </div>
 
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
+            <NavLink class="nav-link" href="doctor">
+                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Doctors Schedule
             </NavLink>
         </div>
 
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
+            <NavLink class="nav-link" href="patient">
+                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Patient Appointment
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="timeslot">
+                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Check TimeSlot
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="clinic">
+                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Locate Clinic
             </NavLink>
         </div>
 
@@ -88,5 +136,6 @@
     {
         NavigationManager.LocationChanged -= OnLocationChanged;
     }
-}
+} *@
 
+ 

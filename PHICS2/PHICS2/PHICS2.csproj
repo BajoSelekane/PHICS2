@@ -6,12 +6,24 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>aspnet-PHICS2-4575e203-94fa-4cb2-9f81-11e52ee2d199</UserSecretsId>
     <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
+    <!-- Disable static web assets processing on the server project to avoid duplicate static asset key errors
+         Static web assets (from client projects and packages) can cause collisions during build when multiple
+         sources export the same asset path. The client project still includes MudBlazor and will publish its
+         static assets; the server can serve them at runtime via MapStaticAssets. -->
+    <DisableStaticWebAssets>true</DisableStaticWebAssets>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Application\Application.csproj" />
+    <Compile Remove="wwwroot\**" />
+    <Content Remove="wwwroot\**" />
+    <EmbeddedResource Remove="wwwroot\**" />
+    <None Remove="wwwroot\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Infrastructure\Infrastructure.csproj" />
     <ProjectReference Include="..\PHICS2.Client\PHICS2.Client.csproj" />
+        <!-- Ensure MudBlazor component types are available to server-side rendering, but exclude client static assets to avoid duplicate static web assets collisions -->
     <PackageReference Include="MediatR.Extensions.Microsoft.AspNetCore" Version="7.0.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjectionFixed" Version="5.1.2" />
@@ -23,8 +35,16 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.2" />
     <PackageReference Include="Microsoft.Identity.Web" Version="4.3.0" />
     <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.15.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="10.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="10.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.0.0" />
     <PackageReference Include="Twilio" Version="7.14.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Endpoints\Doctor\" />
+    <Folder Include="Endpoints\Clinics\" />
+    <Folder Include="Endpoints\TimeSlots\" />
   </ItemGroup>
 
 </Project>

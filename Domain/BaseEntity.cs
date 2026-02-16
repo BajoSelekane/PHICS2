@@ -1,4 +1,5 @@
 ﻿using Domain.Enums;
+using MediatR;
 
 
 namespace Domain
@@ -14,5 +15,16 @@ namespace Domain
         public string? UpdatedBy { get; set; }
         public EntityStatus Status { get; set; }
 
+        private readonly List<INotification> _domainEvents = new();
+        public IReadOnlyCollection<INotification> DomainEvents => _domainEvents.AsReadOnly();
+
+        // Add a domain event
+        public void AddDomainEvent(INotification eventItem) => _domainEvents.Add(eventItem);
+
+        // Clear events after publishing
+        public void ClearDomainEvents() => _domainEvents.Clear();
+
     }
+
+
 }

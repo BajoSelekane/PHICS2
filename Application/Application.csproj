@@ -7,8 +7,26 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Features\Appointments\CreateAppointmentCommand.cs" />
+    <Compile Remove="Features\Appointments\CreateAppointmentHandler.cs" />
+    <Compile Remove="Features\Appointments\Queries\GetAvailableTimeSlotsQuery.cs" />
+    <Compile Remove="Features\Appointments\Queries\GetAvailableTimeSlotsQueryHandler .cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Domain\Domain.csproj" />
     <ProjectReference Include="..\SharedLibrary\SharedLibrary.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Features\Appointments\Queries\" />
+    <Folder Include="Features\Clinics\" />
+    <Folder Include="Features\Doctor\" />
+    <Folder Include="Features\Patients\Events\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.0" />
   </ItemGroup>
 
 </Project>
