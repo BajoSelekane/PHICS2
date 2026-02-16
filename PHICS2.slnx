@@ -4,5 +4,7 @@
   <Project Path="Infrastructure/Infrastructure.csproj" />
   <Project Path="PHICS2/PHICS2.Client/PHICS2.Client.csproj" />
   <Project Path="PHICS2/PHICS2/PHICS2.csproj" />
+  <Project Path="PHICS2Web/PHICS2Web.Client/PHICS2Web.Client.csproj" />
+  <Project Path="PHICS2Web/PHICS2Web/PHICS2Web.csproj" />
   <Project Path="SharedLibrary/SharedLibrary.csproj" />
 </Solution>

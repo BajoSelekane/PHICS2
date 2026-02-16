@@ -5,6 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Application.Features.Appointments.Queries
 {
@@ -28,14 +31,8 @@ namespace Application.Features.Appointments.Queries
                     ts.SlotDate == request.Date &&
                     ts.IsAvailable)
                 .OrderBy(ts => ts.StartTime)
-                .Select(ts => new TimeSlotDto
-                {
-                    Id = ts.Id,
-                    StartTime = ts.StartTime,
-                    EndTime = ts.EndTime,
-                    IsAvailable = ts.IsAvailable
-        })
-        .ToListAsync(cancellationToken);
+                .Select(ts => new TimeSlotDto(ts.Id, ts.StartTime, ts.EndTime, ts.IsAvailable))
+                .ToListAsync(cancellationToken);
         }
 
 
@@ -53,7 +50,7 @@ namespace Application.Features.Appointments.Queries
         //        {
         //            Id = ts.Id,
         //            StartTime = ts.StartTime,
-        //            EndTime = ts.EndTime,
+        //        EndTime = ts.EndTime,
         //            IsAvailable = ts.IsAvailable
         //        })
         //        .ToListAsync(cancellationToken);

@@ -22,14 +22,16 @@ namespace Application.Features.Appointments
                 .FirstAsync(a => a.Id == request.Id, cancellationToken);
 
             return new AppointmentDto(
-               
+                            appointment.Id, 
                 appointment.PatientId,
                 appointment.TimeSlotId,
                 appointment.DoctorId,
+                appointment.Doctor.DoctorName,
                 appointment.PhoneNumber,
                 appointment.AppointmentDate,
                 appointment.EndTime,
-                appointment.Appointment_Description
+                appointment.Appointment_Description,
+                appointment.Status
             );
         }
 

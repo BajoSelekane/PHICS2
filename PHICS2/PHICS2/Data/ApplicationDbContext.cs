@@ -14,12 +14,14 @@ namespace PHICS2.Data
 
         public ApplicationDbContext(
             DbContextOptions<ApplicationDbContext> options,
-            IMediator mediator)   // inject MediatR
+            IMediator? mediator = null)   // inject MediatR
             : base(options)
         {
             _mediator = mediator;
+            
         }
     
+
 
         public DbSet<Patient> Patients => Set<Patient>();
         public DbSet<Doctor> Doctors => Set<Doctor>();
@@ -71,14 +73,28 @@ namespace PHICS2.Data
             .WithOne(t => t.Appointment)
             .HasForeignKey<Appointment>(a => a.TimeSlotId)
             .OnDelete(DeleteBehavior.Restrict);
+ 
 
-            modelBuilder.Entity<Appointment>()
-            .HasIndex(a => a.TimeSlotId)
-            .IsUnique();
+            modelBuilder.Entity<Doctor>()
+                .HasMany(d => d.TimeSlots)
+                .WithOne(t => t.Doctor)
+                .HasForeignKey(t => t.DoctorId);
+
+            modelBuilder.Entity<Patient>()
+                .HasMany(p => p.Appointments)
+                .WithOne(a => a.Patient)
+                .HasForeignKey(a => a.PatientId);
+
 
 
 
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Clinics>()
+               .HasQueryFilter(c => !c.IsDeleted);
+
+            modelBuilder.Entity<Doctor>()
+               .HasQueryFilter(d => !d.IsDeleted);
 
             modelBuilder.Entity<Patient>()
                 .HasQueryFilter(p => !p.IsDeleted);

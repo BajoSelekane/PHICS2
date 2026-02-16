@@ -1,0 +1,157 @@
+﻿@page "/dashboard"
+@using MudBlazor
+
+<MudThemeProvider>
+<MudLayout>
+    <MudAppBar Elevation="1" Fixed="true">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" />
+        <MudText Typo="Typo.h6" Class="ml-2">MediCore</MudText>
+        <MudText Typo="Typo.subtitle2" Class="ml-2 grey-text">Hospital Management System</MudText>
+        <MudSpacer />
+        <MudIconButton Icon="@Icons.Material.Filled.Notifications" Color="Color.Inherit" />
+        <MudIconButton Icon="@Icons.Material.Filled.AccountCircle" Color="Color.Inherit" />
+        <MudMenu Icon="@Icons.Material.Filled.MoreVert">
+            <MudMenuItem>Profile</MudMenuItem>
+            <MudMenuItem>Settings</MudMenuItem>
+            <MudMenuItem>Logout</MudMenuItem>
+        </MudMenu>
+    </MudAppBar>
+
+    <MudDrawer @bind-Open="_drawerOpen" Variant="DrawerVariant.Mini" ClipMode="DrawerClipMode.Always">
+        <MudNavMenu>
+            <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Dashboard">Dashboard</MudNavLink>
+            <MudNavLink Href="/patients" Icon="@Icons.Material.Filled.People">Patients</MudNavLink>
+            <MudNavLink Href="/appointments" Icon="@Icons.Material.Filled.CalendarMonth">Appointments</MudNavLink>
+            <MudNavLink Href="/doctors" Icon="@Icons.Material.Filled.MedicalServices">Doctors</MudNavLink>
+            <MudNavLink Href="/departments" Icon="@Icons.Material.Filled.Business">Departments</MudNavLink>
+            <MudNavLink Href="/reports" Icon="@Icons.Material.Filled.BarChart">Reports</MudNavLink>
+        </MudNavMenu>
+    </MudDrawer>
+
+    <MudMainContent>
+        <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Class="mt-16">
+            <!-- Welcome Section -->
+            <MudText Typo="Typo.h4" Class="mb-4">Hospital Dashboard</MudText>
+            <MudText Typo="Typo.subtitle1" Class="mb-6 grey-text">Welcome back, Dr. Mitchell. Here's your hospital overview for today.</MudText>
+
+            <!-- Stats Cards Row -->
+            <MudGrid Class="mb-6">
+                <MudItem xs="12" sm="6" md="3">
+                    <MudCard Elevation="4" Class="rounded-lg">
+                        <MudCardContent>
+                            <MudText Typo="Typo.subtitle2" Class="grey-text">Total Patients</MudText>
+                            <MudText Typo="Typo.h3" Class="my-2">1,248</MudText>
+                            <MudChip T="string" Size="Size.Small" Color="Color.Success" Class="mr-1">▲ +12%</MudChip>
+                            <MudText Typo="Typo.body2" Class="grey-text d-inline">from last month</MudText>
+                        </MudCardContent>
+                    </MudCard>
+                </MudItem>
+
+                <MudItem xs="12" sm="6" md="3">
+                    <MudCard Elevation="4" Class="rounded-lg">
+                        <MudCardContent>
+                            <MudText Typo="Typo.subtitle2" Class="grey-text">Appointments Today</MudText>
+                            <MudText Typo="Typo.h3" Class="my-2">48</MudText>
+                            <MudChip T="string" Size="Size.Small" Color="Color.Warning" Class="mr-1">⏳ 8 pending</MudChip>
+                            <MudText Typo="Typo.body2" Class="grey-text d-inline">confirmation</MudText>
+                        </MudCardContent>
+                    </MudCard>
+                </MudItem>
+
+                <MudItem xs="12" sm="6" md="3">
+                    <MudCard Elevation="4" Class="rounded-lg">
+                        <MudCardContent>
+                            <MudText Typo="Typo.subtitle2" Class="grey-text">Available Slots</MudText>
+                            <MudText Typo="Typo.h3" Class="my-2">24</MudText>
+                            <MudChip T="string" Size="Size.Small" Color="Color.Error" Class="mr-1">▼ -8%</MudChip>
+                            <MudText Typo="Typo.body2" Class="grey-text d-inline">from yesterday</MudText>
+                        </MudCardContent>
+                    </MudCard>
+                </MudItem>
+
+                <MudItem xs="12" sm="6" md="3">
+                    <MudCard Elevation="4" Class="rounded-lg">
+                        <MudCardContent>
+                            <MudText Typo="Typo.subtitle2" Class="grey-text">Doctors On Duty</MudText>
+                            <MudText Typo="Typo.h3" Class="my-2">5</MudText>
+                            <MudChip T="string" Size="Size.Small" Color="Color.Info" Class="mr-1">1 on leave</MudChip>
+                        </MudCardContent>
+                    </MudCard>
+                </MudItem>
+            </MudGrid>
+
+            <!-- Today's Time Slots Section -->
+            <MudText Typo="Typo.h5" Class="mb-2">Today's Time Slots</MudText>
+            <MudText Typo="Typo.body2" Class="mb-4 grey-text">February 13, 2026 — Overview of available slots</MudText>
+
+            <!-- Table -->
+            <MudTable Items="@_timeSlots" Hover="true" Breakpoint="Breakpoint.Sm" Class="mb-6">
+                <HeaderContent>
+                    <MudTh><MudText Typo="Typo.body2" Class="font-weight-bold">TIME</MudText></MudTh>
+                    <MudTh><MudText Typo="Typo.body2" Class="font-weight-bold">DOCTOR</MudText></MudTh>
+                    <MudTh><MudText Typo="Typo.body2" Class="font-weight-bold">DEPARTMENT</MudText></MudTh>
+                    <MudTh><MudText Typo="Typo.body2" Class="font-weight-bold">STATUS</MudText></MudTh>
+                    <MudTh><MudText Typo="Typo.body2" Class="font-weight-bold">SLOTS</MudText></MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="TIME"><MudText Typo="Typo.body2">@context.Time</MudText></MudTd>
+                    <MudTd DataLabel="DOCTOR"><MudText Typo="Typo.body2">@context.Doctor</MudText></MudTd>
+                    <MudTd DataLabel="DEPARTMENT"><MudText Typo="Typo.body2">@context.Department</MudText></MudTd>
+                    <MudTd DataLabel="STATUS">
+                        @switch (context.Status)
+                        {
+                            case "Available":
+                                <MudChip T="string" Size="Size.Small" Color="Color.Success">Available</MudChip>
+                                break;
+                            case "Fully Booked":
+                                <MudChip T="string" Size="Size.Small" Color="Color.Error">Fully Booked</MudChip>
+                                break;
+                            case "Limited":
+                                <MudChip T="string" Size="Size.Small" Color="Color.Warning">Limited</MudChip>
+                                break;
+                            default:
+                                <MudChip T="string" Size="Size.Small" Color="Color.Default">@context.Status</MudChip>
+                                break;
+                        }
+                    </MudTd>
+                    <MudTd DataLabel="SLOTS"><MudText Typo="Typo.body2">@context.Slots</MudText></MudTd>
+                </RowTemplate>
+            </MudTable>
+
+            <!-- Legend -->
+            <MudStack Row="true" Spacing="3" Class="mb-6">
+                <MudChip T="string" Size="Size.Small" Color="Color.Success">Available</MudChip>
+                <MudChip T="string" Size="Size.Small" Color="Color.Error">Fully Booked</MudChip>
+                <MudChip T="string" Size="Size.Small" Color="Color.Warning">Limited</MudChip>
+            </MudStack>
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
+</MudThemeProvider>
+
+@code {
+    private bool _drawerOpen = true;
+
+    private List<TimeSlot> _timeSlots = new()
+    {
+        new TimeSlot { Time = "08:00 AM", Doctor = "Dr. Sarah Mitchell", Department = "Cardiology", Status = "Available", Slots = 4 },
+        new TimeSlot { Time = "09:00 AM", Doctor = "Dr. James Wilson", Department = "Neurology", Status = "Fully Booked", Slots = 0 },
+        new TimeSlot { Time = "09:30 AM", Doctor = "Dr. Emily Chen", Department = "Pediatrics", Status = "Available", Slots = 2 },
+        new TimeSlot { Time = "10:00 AM", Doctor = "Dr. Robert Clark", Department = "Orthopedics", Status = "Limited", Slots = 1 },
+        new TimeSlot { Time = "10:30 AM", Doctor = "Dr. Sarah Mitchell", Department = "Cardiology", Status = "Available", Slots = 3 },
+        new TimeSlot { Time = "11:00 AM", Doctor = "Dr. Lisa Anderson", Department = "Dermatology", Status = "Fully Booked", Slots = 0 },
+        new TimeSlot { Time = "11:30 AM", Doctor = "Dr. Michael Torres", Department = "General Medicine", Status = "Available", Slots = 5 },
+        new TimeSlot { Time = "01:00 PM", Doctor = "Dr. James Wilson", Department = "Neurology", Status = "Limited", Slots = 1 },
+        new TimeSlot { Time = "02:00 PM", Doctor = "Dr. Emily Chen", Department = "Pediatrics", Status = "Available", Slots = 4 },
+        new TimeSlot { Time = "03:00 PM", Doctor = "Dr. Robert Clark", Department = "Orthopedics", Status = "Fully Booked", Slots = 0 }
+    };
+
+    public class TimeSlot
+    {
+        public string Time { get; set; } = string.Empty;
+        public string Doctor { get; set; } = string.Empty;
+        public string Department { get; set; } = string.Empty;
+        public string Status { get; set; } = string.Empty;
+        public int Slots { get; set; }
+    }
+}

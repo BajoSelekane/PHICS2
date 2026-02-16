@@ -1,0 +1,144 @@
+﻿@page "/patients/{Id:guid}"
+@using MudBlazor
+@inject HttpClient Http
+@inject ISnackbar Snackbar
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-6">
+
+    @if (_loading)
+    {
+        <MudProgressCircular Indeterminate="true" Size="Size.Large" />
+    }
+    else if (_patient is not null)
+    {
+        <!-- Patient Summary Card -->
+        <MudPaper Elevation="6" Class="pa-6 mb-6">
+
+            <MudText Typo="Typo.h5">
+                @_patient.PatientName
+            </MudText>
+
+            <MudText Typo="Typo.body2" Color="Color.Secondary">
+                ID: @_patient.IDNumber
+            </MudText>
+
+            <MudDivider Class="my-3" />
+
+            <MudGrid>
+                <MudItem xs="6">
+                    <MudText>Email: @_patient.Email</MudText>
+                </MudItem>
+                <MudItem xs="6">
+                    <MudText>Phone: @_patient.PhoneNumber</MudText>
+                </MudItem>
+                <MudItem xs="6">
+                    <MudText>DOB: @_patient.DateOfBirth.ToShortDateString()</MudText>
+                </MudItem>
+            </MudGrid>
+
+        </MudPaper>
+
+        <!-- Tabs -->
+        <MudTabs Rounded="true" Elevation="4">
+
+            <!-- DETAILS TAB -->
+            <MudTabPanel Text="Details">
+                <MudText>
+                    @_patient.Appointment_Description
+                </MudText>
+            </MudTabPanel>
+
+            <!-- APPOINTMENTS TAB -->
+            <MudTabPanel Text="Appointments">
+                <MudTable Items="_appointments" Hover="true" Dense="true">
+                    <HeaderContent>
+                        <MudTh>Date</MudTh>
+                        <MudTh>Doctor</MudTh>
+                        <MudTh>Status</MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd>@context.AppointmentDate.ToShortDateString()</MudTd>
+                        <MudTd>@context.DoctorName</MudTd>
+                        <MudTd>@context.Status</MudTd>
+                    </RowTemplate>
+                </MudTable>
+            </MudTabPanel>
+
+            <!-- BOOK APPOINTMENT TAB -->
+            <MudTabPanel Text="Book Appointment">
+                <MudSelect T="Guid" Label="Select TimeSlot"
+                           @bind-Value="_selectedTimeSlotId">
+                    @foreach (var slot in _availableSlots)
+                    {
+                        <MudSelectItem Value="@slot.Id">
+                            @slot.StartTime - @slot.EndTime
+                        </MudSelectItem>
+                    }
+                </MudSelect>
+
+                <MudButton Class="mt-4"
+                           Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           OnClick="BookAppointment">
+                    Confirm Booking
+                </MudButton>
+            </MudTabPanel>
+
+        </MudTabs>
+    }
+
+</MudContainer>
+
+@code {
+
+    [Parameter] public Guid Id { get; set; }
+
+    private bool _loading = true;
+    private PatientDto? _patient;
+    private List<AppointmentDto> _appointments = new();
+    private List<TimeSlotDto> _availableSlots = new();
+    private Guid _selectedTimeSlotId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadDashboard();
+    }
+
+    private async Task LoadDashboard()
+    {
+        try
+        {
+            _patient = await Http.GetFromJsonAsync<PatientDto>($"patients/{Id}");
+          var  _appointments = await Http.GetFromJsonAsync<List<AppointmentDto>>($"appointments/patient/{Id}");
+          var  _availableSlots = await Http.GetFromJsonAsync<List<TimeSlotDto>>($"timeslots/available/{Id}");
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+
+    private async Task BookAppointment()
+    {
+        var response = await Http.PostAsJsonAsync("appointments/book",
+            new
+            {
+                PatientId = Id,
+                TimeSlotId = _selectedTimeSlotId
+            });
+
+        if (response.IsSuccessStatusCode)
+        {
+            Snackbar.Add("Appointment booked successfully!", Severity.Success);
+            await LoadDashboard();
+        }
+        else
+        {
+            Snackbar.Add("Failed to book appointment", Severity.Error);
+        }
+    }
+}

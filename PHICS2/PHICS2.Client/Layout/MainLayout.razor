@@ -1,23 +1,82 @@
 ﻿@inherits LayoutComponentBase
+@using MudBlazor
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+<MudThemeProvider Theme="@_darkTheme">
+    <MudDialogProvider>
+        <MudPopoverProvider>
+            <MudSnackbarProvider>
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>
+                <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+                <link href="@Assets["_content/MudBlazor/MudBlazor.min.css"]" rel="stylesheet" />
 
-        <article class="content px-4">
+                <MudLayout>
+                    <!-- NavMenu contains the AppBar and Drawer -->
+                    <NavMenu />
+
+                    <MudMainContent>
+                        <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Class="mt-16 pa-6">
+                            @Body
+                        </MudContainer>
+                    </MudMainContent>
+                </MudLayout>
+
+            </MudSnackbarProvider>
+        </MudPopoverProvider>
+    </MudDialogProvider>
+</MudThemeProvider>
+
+@code {
+    private MudTheme _darkTheme = new MudTheme()
+    {
+        PaletteDark = new PaletteDark
+        {
+            Primary = "#1565C0",
+            Background = "#121212",
+            DrawerBackground = "#1E1E1E"
+        }
+    };
+}
+<script src="@Assets["_content/MudBlazor/MudBlazor.min.js"]"></script>
+
+<script src="/_framework/aspnetcore-browser-refresh.js"></script>
+@* <MudThemeProvider Theme="@_darkTheme" />
+<MudDialogProvider />
+<MudSnackbarProvider />
+    <MudLayout>
+        <MudAppBar Elevation="4" Color="Color.Primary">
+            <MudText Typo="Typo.h6">PHICS2</MudText>
+        </MudAppBar>
+
+        <MudDrawer Elevation="4" Open="true">
+            <MudNavMenu>
+                <MudNavLink Href="">Home</MudNavLink>
+                <MudNavLink Href="timeslot">Check TimeSlot</MudNavLink>
+                <MudNavLink Href="patient">Patient Registry</MudNavLink>
+                <MudNavLink Href="doctor">Doctors Schedule</MudNavLink>
+                <MudNavLink Href="patient">Patient Appointment</MudNavLink>
+                <MudNavLink Href="patient">Clinics Appointments</MudNavLink>
+               
+            </MudNavMenu>
+        </MudDrawer>
+
+        <MudMainContent>
             @Body
-        </article>
-    </main>
-</div>
+        </MudMainContent>
+    </MudLayout> *@
 
-<div id="blazor-error-ui" data-nosnippet>
-    An unhandled error has occurred.
-    <a href="." class="reload">Reload</a>
-    <span class="dismiss">🗙</span>
-</div>
+
+
+
+@* 
+@code {
+    private MudTheme _darkTheme = new MudTheme()
+    {
+        PaletteDark = new PaletteDark
+        {
+            Primary = "#1565C0",
+            Background = "#121212",
+            DrawerBackground = "#1E1E1E"
+        }
+    };
+}
+ *@
